@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "pip install -r requirements.txt && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf www/ || true",
-    "build": "npm run clean && tsc && cp package.json www/package.json && cd www && zip -r Archive.zip . && cd ..",
+    "build": "npm run clean && tsc && cp package.json www/package.json && cp requirements.txt www/requirements.txt && cd www && zip -r Archive.zip . && cd ..",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/server.ts"
   },
   "repository": {
@@ -28,6 +29,7 @@
     "@types/node": "^11.11.6"
   },
   "dependencies": {
+    "aws-sdk": "^2.437.0",
     "express": "^4.16.4"
   }
 }

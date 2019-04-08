@@ -4,10 +4,11 @@
 
 ##Tasks
 ### Setup Python Enviornment
+Make sure you are in the repo root.
 `pip install virtualenv`
 `virtualenv venv`
 `source venv/bin/activate`
-
+`pip install -r requirements.txt`
 `deactivate`
 
 ### Setup Node Enviornment
@@ -19,8 +20,8 @@
 ### Create a new server.ts file
 Use our basic server as an example to set up this file. For this project it's ok to keep all of your business logic in the one server.ts file, but you can try to use feature directories and app.use routing if you're up for it.
 
-### Add your POST imagetoprocess endpoint
-It should take a string filekey as an input paramater or respond with 422 unprocessable.
+### Add your POST canary endpoint
+It should take a string filekey as a body paramater or respond with 422 unprocessable.
 It should require a token in the Auth Header or respond with 401 unauthorized.
     The matching token should be saved as an enviornment variable
     (TIP we broke this out into its own auth.router before, but youc an access headers as part of the req.headers within your endpoint block)
@@ -46,3 +47,9 @@ Image processing and other complex processing tasks might take a decent amount o
     Upon completion of the process, post a 200 response indicating the processing was completed.
 
 ### Deploying your system!
+Make sure your account has IAM Permissions before starting.
+Use eb cli `eb init` to create a new application.
+    Make sure you specify using NODE.
+Use `eb create` to setup a new enviornment.
+add "start": "pip install -r requirements.txt && node server.js", to the package.json file
+

@@ -16,7 +16,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const child_process_1 = require("child_process");
 (() => __awaiter(this, void 0, void 0, function* () {
     const app = express_1.default();
-    const port = 8082; // default port to listen
+    const port = 8081; // default port to listen
     app.use(body_parser_1.default.json());
     //VERY BAD
     app.use(function (req, res, next) {
