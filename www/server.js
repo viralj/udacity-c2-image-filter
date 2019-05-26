@@ -13,47 +13,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const child_process_1 = require("child_process");
-const https_1 = __importDefault(require("https"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+const Jimp = require("jimp");
 (() => __awaiter(this, void 0, void 0, function* () {
     const app = express_1.default();
-    const port = 8082; // default port to listen
+    const port = process.env.PORT || 8082; // default port to listen
     app.use(body_parser_1.default.json());
     app.use(function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
     });
-    function downloadURLtoFile(url) {
+    function filterImageFromURL(inputURL) {
         return __awaiter(this, void 0, void 0, function* () {
-            const filename = '/tmp/' + Math.floor(Math.random() * 2000) + '.jpg';
-            const absolute = path_1.default.join(__dirname, filename);
-            const file = yield fs_1.default.createWriteStream(absolute, { flags: 'w' });
-            const request = yield https_1.default.get(url, function (response) {
-                response.pipe(file);
-            });
-            return filename;
-        });
-    }
-    function filterLocalImage(inputPath) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const outputPath_builder = inputPath.split('.');
-            outputPath_builder.splice(1, 0, 'filtered');
-            const outputPath = outputPath_builder.join('.');
-            const pythonProcess = child_process_1.spawn('python3', ["src/image_filter.py", "/" + inputPath, "/" + outputPath]);
-            let python;
-            if (pythonProcess !== undefined) {
-                yield pythonProcess.stdout.on('data', (data) => {
-                    console.log(data.toString());
+            // open a file called "lenna.png"
+            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+                const photo = yield Jimp.read(inputURL);
+                const outpath = '/tmp/filtered.' + Math.floor(Math.random() * 2000) + '.jpg';
+                yield photo
+                    .resize(256, 256) // resize
+                    .quality(60) // set JPEG quality
+                    .greyscale() // set greyscale
+                    .write(__dirname + outpath, (img) => {
+                    resolve(outpath);
                 });
-                return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-                    yield pythonProcess.stdout.on('end', () => {
-                        return resolve(outputPath);
-                    });
-                }));
-            }
+            }));
         });
     }
     function deleteLocalFiles(files) {
@@ -69,11 +54,11 @@ const path_1 = __importDefault(require("path"));
         if (!image_url) { // this  regex that they are urls
             return res.status(422).send(`image_url is required`);
         }
-        const filepath = yield downloadURLtoFile(image_url);
-        const filteredpath = yield filterLocalImage(filepath);
-        yield res.sendFile(__dirname + '/' + filteredpath);
+        // const filepath = await downloadURLtoFile(image_url);
+        const filteredpath = yield filterImageFromURL(image_url);
+        yield res.sendFile(__dirname + filteredpath);
         res.on('finish', () => {
-            deleteLocalFiles([filepath, filteredpath]);
+            deleteLocalFiles([filteredpath]);
         });
     }));
     // Root URI call

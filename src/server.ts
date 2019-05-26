@@ -1,53 +1,29 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { spawn } from 'child_process';
-import https from 'https';
 import fs from 'fs';
 import path from 'path';
+import Jimp = require('jimp');
 
 (async () => {
 
   const app = express();
-  const port = 8082; // default port to listen
+  const port = process.env.PORT || 8082; // default port to listen
   
   app.use(bodyParser.json());
-  
-  app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
 
-  async function downloadURLtoFile(url: string) {
-    const filename = '/tmp/'+Math.floor(Math.random() * 2000)+'.jpg';
-    const absolute = path.join(__dirname,filename)
-    const file = await fs.createWriteStream(absolute, {flags: 'w'});
-    const request = await https.get(url, function(response) {
-      response.pipe(file);
-    });
-
-    return filename;
-  }
-
-  async function filterLocalImage(inputPath: string): Promise<string>{
-    const outputPath_builder = inputPath.split('.');
-    outputPath_builder.splice(1,0,'filtered');
-    const outputPath = outputPath_builder.join('.');
-    const pythonProcess = spawn('python3', ["src/image_filter.py", "/"+inputPath, "/"+outputPath]);
-
-    let python;
-    if(pythonProcess !== undefined) {
-      await pythonProcess.stdout.on('data', (data) => {
-        console.log(data.toString())
-      });
-
-      return new Promise( async (resolve) => {
-        await pythonProcess.stdout.on('end', () => {
-          return resolve(outputPath)
+  async function filterImageFromURL(inputURL: string): Promise<string>{
+    // open a file called "lenna.png"
+    return new Promise( async resolve => {
+      const photo = await Jimp.read(inputURL);
+      const outpath = '/tmp/filtered.'+Math.floor(Math.random() * 2000)+'.jpg';
+      await photo
+        .resize(256, 256) // resize
+        .quality(60) // set JPEG quality
+        .greyscale() // set greyscale
+        .write(__dirname+outpath, (img)=>{
+          resolve(outpath);
         });
-      })
-
-    }
+    });
 
   }
 
@@ -58,7 +34,7 @@ import path from 'path';
   }
 
   // Root URI call
-  app.get( "/processedimage", async ( req, res ) => {
+  app.get( "/filteredimage", async ( req, res ) => {
 
     const { image_url } = req.query;
     
@@ -66,19 +42,18 @@ import path from 'path';
       return res.status(422).send(`image_url is required`);
     }
 
-    const filepath = await downloadURLtoFile(image_url);
-    const filteredpath = await filterLocalImage(filepath);
+    const filteredpath = await filterImageFromURL(image_url);
 
-    await res.sendFile(__dirname +'/'+ filteredpath);
+    await res.sendFile(__dirname + filteredpath);
 
     res.on('finish', () => {
-      deleteLocalFiles([filepath, filteredpath]);
+      deleteLocalFiles([filteredpath]);
     });
   });
   
   // Root URI call
   app.get( "/", async ( req, res ) => {
-    res.send("try the correct endpoint")
+    res.send("try GET /filteredimage?image_url={{}}")
   } );
   
 
