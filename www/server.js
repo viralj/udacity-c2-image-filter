@@ -13,57 +13,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-const Jimp = require("jimp");
+const util_1 = require("./util/util");
 (() => __awaiter(this, void 0, void 0, function* () {
     const app = express_1.default();
     const port = process.env.PORT || 8082; // default port to listen
     app.use(body_parser_1.default.json());
-    app.use(function (req, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
-    });
-    function filterImageFromURL(inputURL) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // open a file called "lenna.png"
-            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-                const photo = yield Jimp.read(inputURL);
-                const outpath = '/tmp/filtered.' + Math.floor(Math.random() * 2000) + '.jpg';
-                yield photo
-                    .resize(256, 256) // resize
-                    .quality(60) // set JPEG quality
-                    .greyscale() // set greyscale
-                    .write(__dirname + outpath, (img) => {
-                    resolve(outpath);
-                });
-            }));
-        });
-    }
-    function deleteLocalFiles(files) {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (let file of files) {
-                fs_1.default.unlinkSync(path_1.default.join(__dirname, file));
-            }
-        });
-    }
-    // Root URI call
-    app.get("/processedimage", (req, res) => __awaiter(this, void 0, void 0, function* () {
+    // GET /filteredimage?image_url={{URL}}
+    // endpoint to filter an image from a public url.
+    // IT SHOULD
+    //    1
+    //    1. validate the image_url query
+    //    2. call filterImageFromURL(image_url) to filter the image
+    //    3. send the resulting file in the response
+    //    4. deletes any files on the server on finish of the response
+    // QUERY PARAMATERS
+    //    image_url: URL of a publicly accessible image
+    // RETURNS
+    //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
+    app.get("/filteredimage", (req, res) => __awaiter(this, void 0, void 0, function* () {
         const { image_url } = req.query;
         if (!image_url) { // this  regex that they are urls
             return res.status(422).send(`image_url is required`);
         }
-        // const filepath = await downloadURLtoFile(image_url);
-        const filteredpath = yield filterImageFromURL(image_url);
-        yield res.sendFile(__dirname + filteredpath);
+        const filteredpath = yield util_1.filterImageFromURL(image_url);
+        res.sendFile(filteredpath);
         res.on('finish', () => {
-            deleteLocalFiles([filteredpath]);
+            util_1.deleteLocalFiles([filteredpath]);
         });
     }));
     // Root URI call
     app.get("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
-        res.send("try the correct endpoint");
+        res.send("try GET /filteredimage?image_url={{}}");
     }));
     // Start the Server
     app.listen(port, () => {
