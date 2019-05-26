@@ -4,7 +4,6 @@ import os
 
 inputPath = sys.argv[1]
 outputPath = sys.argv[2]
-fileName = 'xander2.jpg'
 failed = False
 
 def process(inputPath, outputPath):
