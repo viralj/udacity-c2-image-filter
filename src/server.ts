@@ -26,27 +26,8 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //    image_url: URL of a publicly accessible image
   // RETURNS
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
-  app.get( "/filteredimage", async ( req, res ) => {
 
-    // destruct the image_url query param 
-    const { image_url } = req.query;
-    
-    // validate the paramater is a url
-    if(!image_url) { // regex should be better that they are urls
-      return res.status(422).send(`image_url is required`);
-    }
-
-    // call the filterImageFromURL helper function to filter the image
-    const filteredpath = await filterImageFromURL(image_url);
-
-    // respond with the image file
-    res.sendFile(filteredpath);
-
-    // clean up the server
-    res.on('finish', () => {
-      deleteLocalFiles([filteredpath]);
-    });
-  });
+  /**************************************************************************** */
 
   //! END @TODO1
   
