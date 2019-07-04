@@ -28,11 +28,9 @@ const TEST_PASS = "ThisIsMyPassw0rd";
     const app = express_1.default();
     const port = process.env.PORT || 8082; // env port or default port to listen
     app.use(body_parser_1.default.json());
-    // Validate URL
-    // Does it contain an image file type?
+    // to check of url contain an image file type?
     const isImageUrl = require('is-image-url');
-    // Verify URL
-    // Does it exist?
+    // Verify URL if it exist?
     const urlExists = require('url-exists-deep');
     //VERY BAD
     app.use(function (req, res, next) {
@@ -77,7 +75,7 @@ const TEST_PASS = "ThisIsMyPassw0rd";
                     // Send the filtered image file in the response
                     return res.sendFile(data, {}, function (err) {
                         if (err) {
-                            throw err;
+                            return res.status(500).send('Something went wrong!');
                         }
                         else {
                             // Deleting file using helper function
