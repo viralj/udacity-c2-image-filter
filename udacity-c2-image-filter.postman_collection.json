@@ -1,0 +1,331 @@
+{
+  "info": {
+    "_postman_id": "16ed0c6b-2953-45c7-8a54-cea9bc6acac8",
+    "name": "Image_Filter_Server",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "localhost root",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{localhost}}",
+          "host": [
+            "{{localhost}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "authorized-valid /filteredimage?image_url",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"email\":\"test@user.com\",\n\t\"password\":\"ThisIsMyPassw0rd\"\n}"
+        },
+        "url": {
+          "raw": "{{localhost}}/filteredimage?image_url={{site}}",
+          "host": [
+            "{{localhost}}"
+          ],
+          "path": [
+            "filteredimage"
+          ],
+          "query": [
+            {
+              "key": "image_url",
+              "value": "{{site}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "unauthorized /filteredimage?image_url",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{localhost}}/filteredimage?image_url={{site}}",
+          "host": [
+            "{{localhost}}"
+          ],
+          "path": [
+            "filteredimage"
+          ],
+          "query": [
+            {
+              "key": "image_url",
+              "value": "{{site}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "authorized_wrong_url /filteredimage?image_url",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"email\":\"test@user.com\",\n\t\"password\":\"ThisIsMyPassw0rd\"\n}"
+        },
+        "url": {
+          "raw": "{{localhost}}/filteredimage?image_url={{wrong_site}}",
+          "host": [
+            "{{localhost}}"
+          ],
+          "path": [
+            "filteredimage"
+          ],
+          "query": [
+            {
+              "key": "image_url",
+              "value": "{{wrong_site}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "eb_site root",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{localhost}}",
+          "host": [
+            "{{localhost}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "authorized {eb_site}/filteredimage?image_url",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"email\":\"test@user.com\",\n\t\"password\":\"ThisIsMyPassw0rd\"\n}"
+        },
+        "url": {
+          "raw": "{{eb_site}}/filteredimage?image_url={{site}}",
+          "host": [
+            "{{eb_site}}"
+          ],
+          "path": [
+            "filteredimage"
+          ],
+          "query": [
+            {
+              "key": "image_url",
+              "value": "{{site}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "unauthorized {eb_site}/filteredimage?image_url",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{eb_site}}/filteredimage?image_url={{site}}",
+          "host": [
+            "{{eb_site}}"
+          ],
+          "path": [
+            "filteredimage"
+          ],
+          "query": [
+            {
+              "key": "image_url",
+              "value": "{{site}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "authorized_wrong_url {eb_site}/filteredimage?image_url Copy",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"email\":\"test@user.com\",\n\t\"password\":\"ThisIsMyPassw0rd\"\n}"
+        },
+        "url": {
+          "raw": "{{localhost}}/filteredimage?image_url={{wrong_site}}",
+          "host": [
+            "{{localhost}}"
+          ],
+          "path": [
+            "filteredimage"
+          ],
+          "query": [
+            {
+              "key": "image_url",
+              "value": "{{wrong_site}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "f9ffde2c-9e03-11e9-a2a3-2a2ae2dbcce4",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "f9ffdf9e-9e03-11e9-a2a3-2a2ae2dbcce4",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "bb14acd8-dcc9-43d5-8c6c-1c9e4e6c923f",
+      "key": "localhost",
+      "value": "http://localhost:8082",
+      "type": "string"
+    },
+    {
+      "id": "8b2ebc7a-90fe-40de-828c-96b2ca79b2ff",
+      "key": "site",
+      "value": "https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+      "type": "string"
+    },
+    {
+      "id": "961391c7-b86f-4536-ad29-29722e4e2719",
+      "key": "eb_site",
+      "value": "http://udacity-joshi-image-filter-dev.us-east-2.elasticbeanstalk.com",
+      "type": "string"
+    },
+    {
+      "id": "e14ee3e0-38b9-4e1d-a9f1-8e895c8d6374",
+      "key": "wrong_site",
+      "value": "https://www.facebook.com",
+      "type": "string"
+    }
+  ]
+}

@@ -28,6 +28,11 @@
     "@types/node": "^11.11.6"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "email-validator": "^2.0.4",
+    "is-image-url": "^1.1.8",
+    "jimp": "^0.6.4",
+    "url-exists": "^1.0.3",
+    "url-exists-deep": "^1.1.1"
   }
 }
